@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You 💜</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    overflow:hidden;
+    height:100vh;
+    background:url('bg.png') center center / cover no-repeat;
+    color:#111;
+}
+
+.stars{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    z-index:0;
+    display:none;
+}
+
+.star{
+    position:absolute;
+    width:2px;
+    height:2px;
+    background:white;
+    border-radius:50%;
+    animation:twinkle 3s infinite alternate;
+}
+
+@keyframes twinkle{
+    from{
+        opacity:.2;
+        transform:scale(1);
+    }
+    to{
+        opacity:1;
+        transform:scale(2);
+    }
+}
+
+.container{
+    position:relative;
+    z-index:2;
+    width:100%;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:40px 20px;
+}
+
+.card{
+    width:min(800px,100%);
+    max-height:calc(100vh - 80px);
+    overflow-y:auto;
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(14px);
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:28px;
+    padding:40px;
+    text-align:center;
+    box-shadow:
+        0 0 40px rgba(176,118,255,.15),
+        0 0 80px rgba(176,118,255,.1);
+    scrollbar-width:thin;
+    scrollbar-color:rgba(159,111,255,.5) transparent;
+}
+
+.card::-webkit-scrollbar{
+    width:5px;
+}
+
+.card::-webkit-scrollbar-track{
+    background:transparent;
+}
+
+.card::-webkit-scrollbar-thumb{
+    background:rgba(159,111,255,.5);
+    border-radius:999px;
+}
+
+h1{
+    font-size:2rem;
+    margin-bottom:16px;
+    color:white;
+}
+
+.subtitle{
+    opacity:.75;
+    margin-bottom:30px;
+}
+
+button{
+    border:none;
+    cursor:pointer;
+    transition:.3s;
+    font-family:inherit;
+}
+
+.open-btn{
+    background:#3a7bd5;
+    color:white;
+    padding:16px 28px;
+    border-radius:999px;
+    font-size:1rem;
+    box-shadow:0 0 20px rgba(58,123,213,.5);
+}
+
+.open-btn:hover{
+    transform:translateY(-2px) scale(1.03);
+}
+
+.message-box{
+    margin-top:25px;
+    display:none;
+    text-align:left;
+    line-height:1.9;
+    font-size:1.05rem;
+    font-weight:600;
+}
+
+.cursor{
+    display:inline-block;
+    width:2px;
+    background:#111;
+    animation:blink .8s infinite;
+}
+
+@keyframes blink{
+    50%{
+        opacity:0;
+    }
+}
+
+.surprise{
+    margin-top:30px;
+    display:none;
+}
+
+.surprise button{
+    background:#3a7bd5;
+    color:white;
+    padding:14px 24px;
+    border-radius:999px;
+}
+
+.final-message{
+    display:none;
+    margin-top:25px;
+    font-size:1.2rem;
+    font-weight:600;
+    color:#222;
+    animation:fadeIn 1.5s forwards;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(15px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.heart{
+    position:fixed;
+    bottom:-60px;
+    width:60px;
+    height:auto;
+    animation:floatUp linear forwards;
+    pointer-events:none;
+}
+
+@keyframes floatUp{
+    from{
+        transform:translateY(0);
+        opacity:0;
+    }
+
+    10%{
+        opacity:1;
+    }
+
+    to{
+        transform:translateY(-120vh);
+        opacity:0;
+    }
+}
+
+@media(max-width:600px){
+
+.card{
+    padding:25px;
+}
+
+h1{
+    font-size:1.5rem;
+}
+
+.message-box{
+    font-size:.95rem;
+}
+}
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<audio id="heeheeAudio" src="Michael Jackson Hee Hee.mp3" preload="auto"></audio>
+
+<div class="container">
+    <div class="card">
+
+        <h1>
+            Open when you're feeling overwhelmed.
+        </h1>
+
+        <button class="open-btn" id="openBtn">
+            uwu
+        </button>
+
+        <div class="message-box" id="messageBox">
+            <span id="typed"></span><span class="cursor"></span>
+        </div>
+
+        <div class="surprise" id="surprise">
+            <button id="revealBtn">
+                One more thing...
+            </button>
+        </div>
+
+        <div class="final-message" id="finalMessage">
+            HEE HEE
+        </div>
+
+    </div>
+</div>
+
+<script>
+const starsContainer = document.getElementById("stars");
+
+for(let i = 0; i < 150; i++){
+    const star = document.createElement("div");
+    star.classList.add("star");
+
+    star.style.left = Math.random() * 100 + "%";
+    star.style.top = Math.random() * 100 + "%";
+
+    star.style.animationDuration =
+        (2 + Math.random() * 4) + "s";
+
+    starsContainer.appendChild(star);
+}
+
+function createHeart(){
+    const heart = document.createElement("div");
+
+    heart.classList.add("heart");
+    heart.innerHTML = '<img src="snorlax.png" style="width:100%;height:auto;">';
+
+    heart.style.left = Math.random() * 100 + "vw";
+
+    heart.style.animationDuration =
+        (6 + Math.random() * 4) + "s";
+
+    document.body.appendChild(heart);
+
+    setTimeout(()=>{
+        heart.remove();
+    },10000);
+}
+
+setInterval(createHeart,700);
+
+const message =
+`hi beh!
+
+i know na it may be tough for you right now and you're not really in the mood, but i wanted to say that you're going to be okay!
+
+i know your mind is loud,
+i know your chest feels tight,
+i know your thoughts won't sit still,
+
+but this moment won't break you :))
+
+you're tired, not weak.
+you're overwhelmed, not failing.
+
+hinga lang ikaw, take it one step at a time.
+
+you're gonna be okay, i promise hehe`;
+
+const openBtn = document.getElementById("openBtn");
+const typed = document.getElementById("typed");
+const messageBox = document.getElementById("messageBox");
+const surprise = document.getElementById("surprise");
+
+openBtn.addEventListener("click", ()=>{
+
+    openBtn.style.display = "none";
+    messageBox.style.display = "block";
+
+    let index = 0;
+
+    function type(){
+
+        if(index < message.length){
+
+            typed.innerHTML +=
+                message.charAt(index) === "\n"
+                ? "<br>"
+                : message.charAt(index);
+
+            index++;
+
+            setTimeout(type,35);
+
+        }else{
+            surprise.style.display = "block";
+        }
+    }
+
+    type();
+});
+
+document
+.getElementById("revealBtn")
+.addEventListener("click",()=>{
+
+    document
+    .getElementById("finalMessage")
+    .style.display = "block";
+
+    document.getElementById("heeheeAudio").play();
+});
+</script>
+
+</body>
+</html>
